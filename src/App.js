@@ -1,4 +1,7 @@
 import React from "react";
+
+import styled from "styled-components";
+
 import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -6,13 +9,20 @@ import "./App.css";
 
 import Homepage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
-import checkoutPage from "./pages/checkout/checkout.component"
-import Header from "./components/header/header.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
-import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import checkoutPage from "./pages/checkout/checkout.component";
+
+import Header from "./components/header/header.component";
+
+import {
+  auth,
+  createUserProfileDocument,
+} from "./firebase/firebase.utils";
+
 import { setCurrentUser } from "./redux/user/user.actions";
-import { selectCurrentUser } from "./redux/user/user.selector"
-import {createStructuredSelector} from 'reselect';
+import { selectCurrentUser } from "./redux/user/user.selector";
+import { createStructuredSelector } from "reselect";
+import { TitleContainer } from "./components/sign-up/sign-up.styles";
 
 class App extends React.Component {
   unsubscriptFromAuth = null;
@@ -34,6 +44,7 @@ class App extends React.Component {
         });
       }
       setCurrentUser(userAuth);
+     
     });
   }
 
@@ -66,8 +77,8 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector ({
-  currentUser: selectCurrentUser,
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
 });
 
 const mapDispatchToProps = (dispatch) => ({
