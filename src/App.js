@@ -1,6 +1,6 @@
 import React from "react";
 
-import styled from "styled-components";
+// import styled from "styled-components";
 
 import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
@@ -14,42 +14,21 @@ import checkoutPage from "./pages/checkout/checkout.component";
 
 import Header from "./components/header/header.component";
 
-import {
-  auth,
-  createUserProfileDocument,
-} from "./firebase/firebase.utils";
-
-import { setCurrentUser } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selector";
 import { createStructuredSelector } from "reselect";
-import { TitleContainer } from "./components/sign-up/sign-up.styles";
+
+import { checkUserSession } from "./redux/user/user.actions";
 
 class App extends React.Component {
-  unsubscriptFromAuth = null;
+  unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
-
-    this.unsubscriptFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      // createUserProfileDocument(user);
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
-        userRef.onSnapshot((snapShot) => {
-          setCurrentUser({
-            currentUser: {
-              id: snapShot.id,
-              ...snapShot.data(),
-            },
-          });
-        });
-      }
-      setCurrentUser(userAuth);
-     
-    });
+    const { checkUserSession } = this.props;
+    checkUserSession();
   }
 
   componentWillUnmount() {
-    this.unsubscriptFromAuth();
+    this.unsubscribeFromAuth();
   }
 
   render() {
@@ -78,11 +57,11 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+  checkUserSession: () => dispatch(checkUserSession()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
